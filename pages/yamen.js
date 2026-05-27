@@ -2,7 +2,7 @@
 // 中国古代官府衙署分布与规制大屏逻辑
 
 (function () {
-  const MAP_URL = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json';
+  const MAP_NAME = 'china';
   const REG_KEYS = ['大堂', '二堂', '六房', '谯楼', '监狱'];
 
   // 写死数据：不读取本地文件
@@ -312,9 +312,9 @@
   async function renderMap() {
     const el = document.getElementById('yamenChinaMap');
     chart.map = echarts.getInstanceByDom(el) || echarts.init(el);
-
-    const geo = await fetch(MAP_URL).then(r => r.json());
-    echarts.registerMap('china-yamen', geo);
+    if (!echarts.getMap(MAP_NAME)) {
+      throw new Error('本地中国地图数据未加载，请确认 ./vendor/china.js 已部署');
+    }
 
     const baseRows = filteredRows.length ? filteredRows : rows;
     const topData = baseRows.filter(r => r.levelGroup === '府衙及以上').map((r) => ({ name: r.name, value: [r.lng, r.lat], extra: r }));
@@ -335,7 +335,7 @@
         data: ['府衙及以上', '州/县衙']
       },
       geo: {
-        map: 'china-yamen',
+        map: MAP_NAME,
         roam: true,
         zoom: 1.1,
         itemStyle: {
