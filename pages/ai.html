@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>梁影万象 - AI桥梁智析助手</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="top-bar">
+    <h1>梁影万象 · AI桥梁智析助手</h1>
+    <a class="back-login" href="./bridge-index.html">返回全国主界面</a>
+  </header>
+
+  <main class="ai-page-wrap">
+    <section class="ai-page-panel">
+      <header class="ai-panel-head">
+        <h3>桥梁智析助手（DeepSeek）</h3>
+      </header>
+      <div id="aiMessages" class="ai-messages"></div>
+      <div class="ai-actions">
+        <button id="aiAnalyzeBtn" class="btn-secondary">分析当前筛选数据</button>
+      </div>
+      <div class="ai-input-row">
+        <textarea id="aiInput" placeholder="例如：请分析当前筛选结果的朝代结构与省份差异"></textarea>
+        <button id="aiSendBtn" class="btn-secondary">发送</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

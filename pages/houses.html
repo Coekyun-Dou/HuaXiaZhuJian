@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>九州聚落 - 中国古代民居建筑大屏</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="top-bar">
+    <h1>九州聚落 · 中国古代民居建筑大屏</h1>
+    <a class="back-login" href="./home.html">返回系统主页</a>
+  </header>
+
+  <section class="filter-bar">
+    <div class="filter-item">
+      <label for="housesFilterEra">时代筛选</label>
+      <select id="housesFilterEra"><option value="">全部</option></select>
+    </div>
+    <div class="filter-item">
+      <label for="housesFilterProvince">省份筛选</label>
+      <select id="housesFilterProvince"><option value="">全部</option></select>
+    </div>
+    <div class="filter-item">
+      <label for="housesFilterType">类型筛选</label>
+      <select id="housesFilterType"><option value="">全部</option></select>
+    </div>
+    <div class="filter-item">
+      <label for="housesFilterMaterial">材料筛选</label>
+      <select id="housesFilterMaterial"><option value="">全部</option></select>
+    </div>
+    <div class="search-wrap">
+      <label>数据操作</label>
+      <div class="search-row">
+        <button id="housesExportCsvBtn" class="btn-secondary">导出筛选CSV</button>
+        <button id="housesResetFilterBtn" class="btn-secondary">重置筛选</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-layout">
+    <aside class="side-panel chart-stack">
+      <section class="chart-card">
+        <h3>建筑材料占比（南丁格尔玫瑰图）</h3>
+        <div id="materialRoseChart" class="chart-box"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>时代演进趋势（面积折线图）</h3>
+        <div id="eraAreaChart" class="chart-box"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>中国古代民居建筑特写与介绍</h3>
+        <div class="chaoshan-feature">
+          <p>中国古代民居是地域环境、礼制文化与家族组织共同塑造的空间结晶。从北方四合院到徽州天井院，从闽南红砖厝到客家土楼，不同类型既回应了气候与地形，也承载着宗法伦理与生活秩序。其平面布局强调“中轴—院落—厅堂”的层次关系，构造上注重木构榫卯、砖石围护与屋面排水，形成兼具实用与审美的建造智慧。民居不仅是居住容器，更是地方工艺、民俗信仰与社会结构的历史文本。透过这些遗存，我们能够直观理解中国传统社会在“家—族—乡”尺度上的组织方式，以及建筑如何在延续传统中不断适应时代变迁。</p>
+        </div>
+      </section>
+    </aside>
+
+    <main class="map-main">
+      <div id="housesChinaMap" class="map-container"></div>
+      <div class="map-license">
+        地图审图号：GS（2020）4614号 | 地图数据来源：阿里云 DataV 开放平台
+      </div>
+    </main>
+
+    <aside class="side-panel chart-stack-right">
+      <section class="chart-card">
+        <h3>地域适应性雷达（按当前可见类型）</h3>
+        <div id="adaptRadarChart" class="chart-box"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>院落格局分布（横向条形图）</h3>
+        <div id="layoutBarChart" class="chart-box"></div>
+      </section>
+    </aside>
+  </section>
+
+  <script src="./vendor/echarts.min.js"></script>
+  <script src="./vendor/china.js"></script>
+  <script src="./vendor/papaparse.min.js"></script>
+  <script src="./houses.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>华夏筑建 - 登录</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="login-page">
+  <div class="ink-bg"></div>
+  <div class="ink-flow" aria-hidden="true">
+    <span class="ink-blob blob-a"></span>
+    <span class="ink-blob blob-b"></span>
+    <span class="ink-blob blob-c"></span>
+    <span class="ink-blob blob-d"></span>
+    <span class="ink-blob blob-e"></span>
+    <span class="ink-blob blob-f"></span>
+  </div>
+  <div class="gold-ribbons" aria-hidden="true">
+    <span class="ribbon ribbon-a"></span>
+    <span class="ribbon ribbon-b"></span>
+    <span class="ribbon ribbon-c"></span>
+  </div>
+
+  <main class="login-wrapper">
+    <section class="login-card">
+      <div class="logo-row" aria-hidden="true">
+        <span class="logo-chip">桥</span>
+        <span class="logo-chip">宫</span>
+        <span class="logo-chip">居</span>
+        <span class="logo-chip">府</span>
+      </div>
+      <h1 class="system-title">华夏筑鉴</h1>
+      <p class="system-subtitle">中国大学生计算机设计大赛 · 信息可视化赛道</p>
+      <p class="system-slogan">桥梁 · 皇宫 · 民居 · 官府 多维文物可视化平台</p>
+
+      <div class="form-item">
+        <label for="username">用户名</label>
+        <input id="username" type="text" placeholder="请输入用户名" />
+      </div>
+
+      <div class="form-item">
+        <label for="password">密码</label>
+        <input id="password" type="password" placeholder="请输入密码" />
+      </div>
+
+      <button id="enterBtn" class="btn-primary">进入系统</button>
+    </section>
+  </main>
+
+  <script>
+    // 登录页交互：无需真实后端校验，先进入 home 业务入口页
+    document.getElementById('enterBtn').addEventListener('click', function () {
+      window.location.href = './pages/home.html';
+    });
+  </script>
+</body>
+</html>

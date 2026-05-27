@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>梁影万象 - 桥梁详情</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="top-bar">
+    <h1 id="bridgeDetailTitle">梁影万象 · 桥梁文物详情</h1>
+    <div class="top-actions">
+      <button id="bridgeGraphBtn" class="btn-secondary">关系导图</button>
+      <button id="bridgeBackBtn" class="btn-secondary">返回省份地图</button>
+    </div>
+  </header>
+
+  <main class="detail-layout">
+    <section class="detail-main-card">
+      <div class="detail-cover-wrap">
+        <img id="bridgeImage" class="detail-cover" alt="桥梁图片" />
+      </div>
+      <div class="detail-content">
+        <h2 id="bridgeName" class="detail-name">桥梁名称</h2>
+        <p id="bridgeIntro" class="detail-intro">暂无桥梁介绍。</p>
+
+        <div class="detail-meta-grid">
+          <div class="meta-item"><span>时代</span><strong id="bridgeDynasty">-</strong></div>
+          <div class="meta-item"><span>省份</span><strong id="bridgeProvince">-</strong></div>
+          <div class="meta-item"><span>位置</span><strong id="bridgeAddress">-</strong></div>
+          <div class="meta-item"><span>批次</span><strong id="bridgeBatch">-</strong></div>
+          <div class="meta-item"><span>分类</span><strong id="bridgeCategory">-</strong></div>
+          <div class="meta-item"><span>坐标</span><strong id="bridgeCoord">-</strong></div>
+        </div>
+
+        <h3 class="detail-subtitle">文物要点</h3>
+        <ul id="bridgeHighlights" class="detail-list"></ul>
+
+        <h3 class="detail-subtitle">关系图谱</h3>
+        <div id="bridgeGraph" class="detail-graph"></div>
+
+        <h3 class="detail-subtitle">参考资料</h3>
+        <div id="bridgeSources" class="detail-links"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

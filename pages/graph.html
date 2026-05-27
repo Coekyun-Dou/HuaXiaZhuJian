@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>梁影万象 - 省份关系导图</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="top-bar">
+    <h1 id="graphTitle">梁影万象 · 省份关系导图</h1>
+    <a id="graphBackBtn" class="back-login" href="./bridge-index.html">返回全国</a>
+  </header>
+
+  <main class="graph-page-main">
+    <section class="graph-panel">
+      <div id="provinceGraph" class="graph-canvas"></div>
+      <div class="graph-tip">提示：中心为省份，向外扩展桥梁、批次与材质节点，可拖拽缩放查看。</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>

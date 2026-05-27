@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>紫微星垣 - 中国古代皇宫建筑可视化</title>
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    .palace-layout {
+      height: calc(100vh - 126px);
+      grid-template-columns: 320px 1fr 340px;
+    }
+    .palace-center {
+      display: grid;
+      grid-template-rows: 460px 460px;
+      gap: 14px;
+      padding: 12px;
+      border: 1px solid rgba(200, 166, 106, 0.5);
+      border-radius: 12px;
+      background: radial-gradient(circle at 50% 20%, rgba(40, 83, 112, 0.4), rgba(8, 21, 33, 0.86));
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset, 0 18px 36px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+    }
+    .palace-center .chart-card {
+      padding-top: 8px;
+    }
+    #palaceMapScatter,
+    #palaceHeatMap,
+    #palaceDynastyBar,
+    #palaceTypePie,
+    #palaceSankey {
+      width: 100%;
+      height: calc(100% - 28px);
+      min-height: 260px;
+    }
+    #palaceDynastyBar {
+      height: 240px;
+      min-height: 240px;
+    }
+    #palaceTypePie {
+      height: 220px;
+      min-height: 220px;
+    }
+    .palace-layout .chart-stack-right {
+      grid-template-rows: auto auto;
+      align-content: start;
+    }
+    .palace-sankey-card {
+      height: 430px;
+    }
+    #palaceSankey {
+      min-height: 320px;
+      height: 360px;
+    }
+    .palace-detail {
+      border: 1px solid rgba(232, 204, 140, 0.24);
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(11, 26, 40, 0.7), rgba(8, 20, 32, 0.82));
+      padding: 12px;
+      color: #d8e6f1;
+      line-height: 1.85;
+      font-size: 13px;
+      min-height: 210px;
+    }
+    .palace-detail b {
+      color: #f5d8a8;
+    }
+    .palace-intro-text {
+      color: #cfe1ee;
+      font-size: 12px;
+      line-height: 1.8;
+      text-align: justify;
+      text-indent: 2em;
+    }
+    @media (max-width: 1400px) {
+      .palace-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .palace-center {
+        min-height: 820px;
+      }
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+  <header class="top-bar">
+    <h1>紫微星垣 · 中国古代皇宫建筑可视化</h1>
+    <a class="back-login" href="./home.html">返回入口</a>
+  </header>
+
+  <section class="filter-bar">
+    <div class="filter-item">
+      <label for="palaceDynastyFilter">时代筛选</label>
+      <select id="palaceDynastyFilter">
+        <option value="">全部</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label for="palaceTypeFilter">类型筛选</label>
+      <select id="palaceTypeFilter">
+        <option value="">全部</option>
+      </select>
+    </div>
+    <div class="search-wrap">
+      <label>数据操作</label>
+      <div class="search-row">
+        <button id="palaceExportBtn" class="btn-secondary">导出筛选CSV</button>
+        <button id="palaceResetBtn" class="btn-secondary">重置筛选</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-layout palace-layout">
+    <aside class="side-panel chart-stack">
+      <section class="chart-card">
+        <h3>时代分布柱状图</h3>
+        <div id="palaceDynastyBar"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>皇宫类型占比环形图</h3>
+        <div id="palaceTypePie"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>中国古代皇宫建筑特写与介绍</h3>
+        <div class="palace-intro-text">中国古代皇宫建筑是礼制、权力与技术共同塑造的空间体系。以“前朝后寝、中轴对称”为核心原则，宫殿群通过殿门、庭院、廊庑和台基层层递进，形成严整的等级秩序。其类型既包括都城中的核心皇宫，也包含离宫别苑、行宫与潜邸，分别承担朝会政务、季节驻跸与生活起居等功能。从唐宋到明清，木构架、斗拱尺度与院落组织不断演变，但“以礼统形、以轴定序”的营建逻辑始终延续，体现了中国古代都城治理与建筑美学的高度统一。</div>
+      </section>
+    </aside>
+
+    <main class="palace-center">
+      <section class="chart-card">
+        <h3>皇宫建筑地图散点图（按时代着色）</h3>
+        <div id="palaceMapScatter"></div>
+      </section>
+      <section class="chart-card">
+        <h3>区域密度热力图</h3>
+        <div id="palaceHeatMap"></div>
+      </section>
+      <div class="map-license">地图审图号：GS（2020）4614号 | 地图数据来源：阿里云 DataV 开放平台</div>
+    </main>
+
+    <aside class="side-panel chart-stack-right">
+      <section class="chart-card palace-sankey-card">
+        <h3>历史时间轴桑基图</h3>
+        <div id="palaceSankey"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>皇宫详情</h3>
+        <div id="palaceDetail" class="palace-detail">点击地图散点查看皇宫详情，并联动高亮其时代与类型数据。</div>
+      </section>
+    </aside>
+  </section>
+
+  <script src="./vendor/echarts.min.js"></script>
+  <script src="./vendor/china.js"></script>
+  <script src="./palace.js"></script>
+</body>
+</html>

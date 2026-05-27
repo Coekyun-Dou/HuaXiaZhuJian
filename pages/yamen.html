@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中国古代官府衙署分布与规制大屏</title>
+  <link rel="stylesheet" href="./style.css" />
+  <style>
+    .yamen-detail {
+      border: 1px solid rgba(232, 204, 140, 0.24);
+      border-radius: 10px;
+      background: rgba(6, 22, 36, 0.58);
+      padding: 10px;
+      color: #d8e6f1;
+      line-height: 1.8;
+      font-size: 13px;
+      min-height: 130px;
+    }
+    .yamen-detail b { color: #f5d8a8; }
+  </style>
+</head>
+<body class="dashboard-page">
+  <header class="top-bar">
+    <h1>九州官治 · 中国古代官府衙署分布与规制大屏</h1>
+    <a class="back-login" href="./home.html">返回系统主页</a>
+  </header>
+
+  <section class="filter-bar">
+    <div class="filter-item">
+      <label for="yamenFilterDynasty">朝代筛选</label>
+      <select id="yamenFilterDynasty"><option value="">全部</option></select>
+    </div>
+    <div class="filter-item">
+      <label for="yamenFilterProvince">省份筛选</label>
+      <select id="yamenFilterProvince"><option value="">全部</option></select>
+    </div>
+    <div class="filter-item">
+      <label for="yamenFilterLevel">级别筛选</label>
+      <select id="yamenFilterLevel"><option value="">全部</option></select>
+    </div>
+    <div class="filter-item">
+      <label for="yamenFilterProtection">保护筛选</label>
+      <select id="yamenFilterProtection"><option value="">全部</option></select>
+    </div>
+    <div class="search-wrap">
+      <label>数据操作</label>
+      <div class="search-row">
+        <button id="yamenExportCsvBtn" class="btn-secondary">导出筛选CSV</button>
+        <button id="yamenResetFilterBtn" class="btn-secondary">重置筛选</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen-layout">
+    <aside class="side-panel chart-stack">
+      <section class="chart-card">
+        <h3>权力层级金字塔（漏斗）</h3>
+        <div id="levelFunnelChart" class="chart-box"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>时代演变（朝代柱状图）</h3>
+        <div id="dynastyBarChart" class="chart-box"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>官府详情</h3>
+        <div id="yamenDetail" class="yamen-detail">点击地图散点查看官府详细信息。</div>
+      </section>
+    </aside>
+
+    <main class="map-main">
+      <div id="yamenChinaMap" class="map-container"></div>
+      <div class="map-license">地图审图号：GS（2020）4614号 | 地图数据来源：阿里云 DataV 开放平台</div>
+    </main>
+
+    <aside class="side-panel chart-stack-right">
+      <section class="chart-card">
+        <h3>规制完整度（雷达）</h3>
+        <div id="regulationRadarChart" class="chart-box"></div>
+      </section>
+
+      <section class="chart-card">
+        <h3>保护级别（环形图）</h3>
+        <div id="protectionPieChart" class="chart-box"></div>
+      </section>
+    </aside>
+  </section>
+
+  <script src="./vendor/echarts.min.js"></script>
+  <script src="./vendor/papaparse.min.js"></script>
+  <script src="./yamen.js"></script>
+</body>
+</html>

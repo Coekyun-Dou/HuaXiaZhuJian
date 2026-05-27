@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>梁影万象 - 省份微观分布</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="top-bar">
+    <h1 id="provinceTitle">梁影万象 · 省份桥梁文物微观分布</h1>
+    <button id="backBtn" class="btn-secondary">返回全国地图</button>
+  </header>
+
+  <main class="province-shell">
+    <section class="province-left">
+      <div class="province-panel stamp-panel">
+        <h3>省份概况</h3>
+        <div class="overview-grid">
+          <div><span>桥梁总数</span><strong id="pvTotal">0</strong></div>
+          <div><span>覆盖朝代</span><strong id="pvDynastyCount">0</strong></div>
+          <div><span>覆盖批次</span><strong id="pvBatchCount">0</strong></div>
+          <div><span>坐标完备</span><strong id="pvCoordCount">0</strong></div>
+        </div>
+      </div>
+
+      <div class="province-panel">
+        <h3>省份文化背景</h3>
+        <p id="pvCultureText" class="province-culture-text">正在生成该省桥梁文化解读...</p>
+      </div>
+    </section>
+
+    <section class="province-main decorative-frame">
+      <div id="provinceMap" class="map-container"></div>
+
+      <div class="map-license">
+        地图审图号：GS（2020）4614号 | 地图数据来源：阿里云 DataV 开放平台
+      </div>
+
+      <div id="provinceTips" class="province-tips">
+        正在加载省份地图与桥梁散点数据...
+      </div>
+    </section>
+
+    <section class="province-right">
+      <div class="province-panel">
+        <h3>朝代分布</h3>
+        <div id="pvDynastyChart" class="mini-chart"></div>
+      </div>
+      <div class="province-panel">
+        <h3>批次分布</h3>
+        <div id="pvBatchChart" class="mini-chart"></div>
+      </div>
+      <div class="province-panel">
+        <h3>桥梁名录</h3>
+        <div id="pvBridgeList" class="bridge-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="csvFallbackBox" class="csv-fallback hidden">
+    <p>当前环境无法自动读取本地 CSV，请手动选择文件：</p>
+    <input id="csvFileInput" type="file" accept=".csv,text/csv" />
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
