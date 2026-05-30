@@ -6,12 +6,14 @@ const echarts = window.echarts;
 
 const CHINA_GEOJSON_URLS = [
   'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json',
-  'https://geo.datav.aliyun.com/areas_v3/bound/100000.json'
+  'https://geo.datav.aliyun.com/areas_v3/bound/100000.json',
+  './data/geo/100000_full.json'
 ];
-const PROVINCE_GEOJSON_URLS = (adcode) => [
+const PROVINCE_GEOJSON_URLS = (adcode, provinceName) => [
   `https://geo.datav.aliyun.com/areas_v3/bound/${adcode}_full.json`,
-  `https://geo.datav.aliyun.com/areas_v3/bound/${adcode}.json`
-];
+  `https://geo.datav.aliyun.com/areas_v3/bound/${adcode}.json`,
+  `./data/geo/${adcode}_full.json`
+].filter(Boolean);
 
 const PROVINCE_ADCODE_MAP = {
   '北京市': '110000',
@@ -87,6 +89,193 @@ const PROVINCE_ALIAS_MAP = {
   '澳门': '澳门特别行政区'
 };
 
+const PROVINCE_CENTER_COORDS = {
+  '北京市': [116.405285, 39.904989],
+  '天津市': [117.190182, 39.125596],
+  '河北省': [114.502461, 38.045474],
+  '山西省': [112.549248, 37.857014],
+  '内蒙古自治区': [111.670801, 40.818311],
+  '辽宁省': [123.429096, 41.796767],
+  '吉林省': [125.3245, 43.886841],
+  '黑龙江省': [126.642464, 45.756967],
+  '上海市': [121.472644, 31.231706],
+  '江苏省': [118.767413, 32.041544],
+  '浙江省': [120.153576, 30.287459],
+  '安徽省': [117.283042, 31.86119],
+  '福建省': [119.306239, 26.075302],
+  '江西省': [115.892151, 28.676493],
+  '山东省': [117.000923, 36.675807],
+  '河南省': [113.665412, 34.757975],
+  '湖北省': [114.298572, 30.584355],
+  '湖南省': [112.982279, 28.19409],
+  '广东省': [113.280637, 23.125178],
+  '广西壮族自治区': [108.320004, 22.82402],
+  '海南省': [110.33119, 20.031971],
+  '重庆市': [106.504962, 29.533155],
+  '四川省': [104.065735, 30.659462],
+  '贵州省': [106.713478, 26.578343],
+  '云南省': [102.712251, 25.040609],
+  '西藏自治区': [91.132212, 29.660361],
+  '陕西省': [108.948024, 34.263161],
+  '甘肃省': [103.823557, 36.058039],
+  '青海省': [101.778916, 36.623178],
+  '宁夏回族自治区': [106.278179, 38.46637],
+  '新疆维吾尔自治区': [87.617733, 43.792818],
+  '台湾省': [121.509062, 25.044332],
+  '香港特别行政区': [114.173355, 22.320048],
+  '澳门特别行政区': [113.54909, 22.198951]
+};
+
+const PROVINCE_FALLBACK_BOUNDS = {
+  '北京市': { name: '北京市', bounds: [[115.4, 39.4], [117.5, 41.1]] },
+  '天津市': { name: '天津市', bounds: [[116.7, 38.5], [118.1, 40.3]] },
+  '河北省': { name: '河北省', bounds: [[113.4, 36.0], [119.9, 42.6]] },
+  '山西省': { name: '山西省', bounds: [[110.2, 34.5], [114.6, 40.7]] },
+  '内蒙古自治区': { name: '内蒙古自治区', bounds: [[97.2, 37.4], [126.1, 53.4]] },
+  '辽宁省': { name: '辽宁省', bounds: [[118.8, 38.7], [125.8, 43.5]] },
+  '吉林省': { name: '吉林省', bounds: [[121.6, 40.8], [131.3, 46.3]] },
+  '黑龙江省': { name: '黑龙江省', bounds: [[121.2, 43.4], [135.1, 53.6]] },
+  '上海市': { name: '上海市', bounds: [[120.8, 30.7], [122.1, 31.9]] },
+  '江苏省': { name: '江苏省', bounds: [[116.3, 30.8], [121.9, 35.2]] },
+  '浙江省': { name: '浙江省', bounds: [[118.0, 27.0], [123.0, 31.3]] },
+  '安徽省': { name: '安徽省', bounds: [[114.9, 29.4], [119.6, 34.7]] },
+  '福建省': { name: '福建省', bounds: [[115.8, 23.5], [120.7, 28.4]] },
+  '江西省': { name: '江西省', bounds: [[113.6, 24.5], [118.5, 30.1]] },
+  '山东省': { name: '山东省', bounds: [[114.8, 34.4], [122.7, 38.4]] },
+  '河南省': { name: '河南省', bounds: [[110.2, 31.4], [116.7, 36.4]] },
+  '湖北省': { name: '湖北省', bounds: [[108.3, 29.0], [116.1, 33.3]] },
+  '湖南省': { name: '湖南省', bounds: [[108.6, 24.4], [114.4, 30.3]] },
+  '广东省': { name: '广东省', bounds: [[109.6, 20.1], [117.3, 25.5]] },
+  '广西壮族自治区': { name: '广西壮族自治区', bounds: [[104.5, 20.9], [112.1, 26.4]] },
+  '海南省': { name: '海南省', bounds: [[108.6, 18.0], [111.2, 20.2]] },
+  '重庆市': { name: '重庆市', bounds: [[105.3, 28.1], [110.2, 32.2]] },
+  '四川省': { name: '四川省', bounds: [[97.3, 26.0], [108.6, 34.3]] },
+  '贵州省': { name: '贵州省', bounds: [[103.6, 24.6], [109.6, 29.2]] },
+  '云南省': { name: '云南省', bounds: [[97.5, 21.1], [106.2, 29.3]] },
+  '西藏自治区': { name: '西藏自治区', bounds: [[78.4, 26.8], [99.1, 36.5]] },
+  '陕西省': { name: '陕西省', bounds: [[105.5, 31.7], [111.3, 39.6]] },
+  '甘肃省': { name: '甘肃省', bounds: [[92.3, 32.6], [108.7, 42.8]] },
+  '青海省': { name: '青海省', bounds: [[89.4, 31.6], [103.1, 39.2]] },
+  '宁夏回族自治区': { name: '宁夏回族自治区', bounds: [[104.3, 35.2], [107.6, 39.4]] },
+  '新疆维吾尔自治区': { name: '新疆维吾尔自治区', bounds: [[73.4, 34.3], [96.4, 49.2]] },
+  '台湾省': { name: '台湾省', bounds: [[119.9, 21.8], [122.1, 25.4]] },
+  '香港特别行政区': { name: '香港特别行政区', bounds: [[113.8, 22.1], [114.4, 22.6]] },
+  '澳门特别行政区': { name: '澳门特别行政区', bounds: [[113.5, 22.1], [113.7, 22.3]] }
+};
+
+const HUNAN_LOCAL_COORDS = {
+  '长沙': [112.9388, 28.2282],
+  '浏阳': [113.6433, 28.1638],
+  '宁乡': [112.5518, 28.2774],
+  '怀化': [109.9985, 27.554],
+  '通道': [109.7833, 26.158],
+  '芷江': [109.6849, 27.4439],
+  '永州': [111.6134, 26.4196],
+  '东安': [111.3165, 26.392],
+  '江永': [111.3435, 25.2745],
+  '江华': [111.5795, 25.1857],
+  '祁阳': [111.8573, 26.5857],
+  '益阳': [112.3552, 28.5539],
+  '安化': [111.2128, 28.3742],
+  '湘西': [109.7397, 28.3143],
+  '凤凰': [109.5996, 27.9482],
+  '娄底': [112.0085, 27.7281],
+  '岳阳': [113.1292, 29.3571],
+  '汨罗': [113.0671, 28.8068],
+  '湘潭': [112.9441, 27.8297],
+  '湘乡': [112.5351, 27.7341],
+  '常德': [111.699, 29.0316],
+  '临澧': [111.6473, 29.4409],
+  '衡阳': [112.572, 26.8934],
+  '祁东': [112.0904, 26.7996],
+  '郴州': [113.0321, 25.7936],
+  '汝城': [113.6847, 25.533],
+  '嘉禾': [112.369, 25.5878]
+};
+
+function buildRectangleGeoJson(name, bounds) {
+  const [[minLng, minLat], [maxLng, maxLat]] = bounds;
+  return {
+    type: 'FeatureCollection',
+    features: [{
+      type: 'Feature',
+      properties: { name },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [[
+          [minLng, minLat],
+          [maxLng, minLat],
+          [maxLng, maxLat],
+          [minLng, maxLat],
+          [minLng, minLat]
+        ]]
+      }
+    }]
+  };
+}
+
+function buildProvinceFallbackGeoJson(provinceName) {
+  const fallback = PROVINCE_FALLBACK_BOUNDS[provinceName];
+  if (!fallback) return null;
+  return buildRectangleGeoJson(fallback.name, fallback.bounds);
+}
+
+async function loadProvinceGeoJson(adcode, provinceName) {
+  try {
+    return await fetchGeoJsonWithFallback(PROVINCE_GEOJSON_URLS(adcode, provinceName));
+  } catch (error) {
+    console.warn('省份 GeoJSON 外部加载失败，使用本地兜底轮廓：', error);
+    const localFallback = buildProvinceFallbackGeoJson(provinceName);
+    if (localFallback) return localFallback;
+    throw error;
+  }
+}
+
+function getDeterministicOffset(seedText) {
+  const seed = Array.from(String(seedText || '')).reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const lngOffset = ((seed % 11) - 5) * 0.08;
+  const latOffset = (((Math.floor(seed / 11)) % 11) - 5) * 0.07;
+  return [lngOffset, latOffset];
+}
+
+function getFeatureCenter(feature) {
+  const props = feature?.properties || {};
+  const center = props.center || props.centroid || props.cp;
+  return Array.isArray(center) && center.length >= 2 ? center : null;
+}
+
+function getGeoJsonNameCenterPairs(geoJson) {
+  if (!geoJson || !Array.isArray(geoJson.features)) return [];
+  return geoJson.features
+    .map((feature) => ({
+      name: feature?.properties?.name || '',
+      center: getFeatureCenter(feature)
+    }))
+    .filter(item => item.name && Array.isArray(item.center))
+    .sort((a, b) => b.name.length - a.name.length);
+}
+
+function inferLocalBridgeCoordinate(row, provinceName, provinceGeoJSON) {
+  const text = `${row.name || ''}${row.city || ''}${row.address || ''}`.trim();
+  const geoHit = getGeoJsonNameCenterPairs(provinceGeoJSON).find(item => text.includes(item.name));
+  if (geoHit) {
+    const [lng, lat] = geoHit.center;
+    const [lngOffset, latOffset] = getDeterministicOffset(row.name || text);
+    return [lng + lngOffset, lat + latOffset];
+  }
+
+  const cityHit = provinceName === '湖南省'
+    ? Object.keys(HUNAN_LOCAL_COORDS).find(key => text.includes(key))
+    : '';
+
+  const [lng, lat] = cityHit
+    ? HUNAN_LOCAL_COORDS[cityHit]
+    : (PROVINCE_CENTER_COORDS[provinceName] || []);
+  if (!Number.isFinite(lng) || !Number.isFinite(lat)) return null;
+  const [lngOffset, latOffset] = getDeterministicOffset(row.name || text);
+  return [lng + lngOffset, lat + latOffset];
+}
+
 // 在线地理编码缓存键
 const GEOCODE_CACHE_KEY = 'bridge_geocode_cache_v1';
 const AMAP_KEY_STORAGE = 'bridge_amap_key';
@@ -110,6 +299,8 @@ const CHINA_MAP_CACHE = {
   loaded: false,
   mapName: 'china'
 };
+
+const LOCAL_PROVINCE_GEOJSON_CACHE = {};
 
 const INDEX_FILTER_OPTIONS = {
   dynasties: [],
@@ -141,7 +332,7 @@ async function fetchGeoJsonWithFallback(urls) {
 
   for (const url of urls) {
     try {
-      const resp = await fetch(url);
+      const resp = await fetch(url, { referrerPolicy: 'no-referrer' });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       return await resp.json();
     } catch (e) {
@@ -160,13 +351,50 @@ async function ensureChinaMapRegistered() {
     const geo = await fetchGeoJsonWithFallback(CHINA_GEOJSON_URLS);
     echarts.registerMap(mapName, geo);
   } catch (e) {
+    if (!echarts.getMap('china')) throw e;
     mapName = 'china';
-    console.warn('外部中国 GeoJSON 加载失败，已退回内置 china 地图：', e);
+    console.warn('中国 full GeoJSON 加载失败，已退回内置 china 地图：', e);
   }
 
   CHINA_MAP_CACHE.loaded = true;
   CHINA_MAP_CACHE.mapName = mapName;
   return mapName;
+}
+
+async function getLocalProvinceGeoJson(provinceName) {
+  const adcode = PROVINCE_ADCODE_MAP[provinceName];
+  if (!adcode) return null;
+  if (!LOCAL_PROVINCE_GEOJSON_CACHE[provinceName]) {
+    LOCAL_PROVINCE_GEOJSON_CACHE[provinceName] = fetchGeoJsonWithFallback([`./data/geo/${adcode}_full.json`])
+      .catch((error) => {
+        console.warn(`本地省份 GeoJSON 加载失败：${provinceName}`, error);
+        return null;
+      });
+  }
+  return LOCAL_PROVINCE_GEOJSON_CACHE[provinceName];
+}
+
+async function enrichRowsWithLocalCityCoordinates(rows) {
+  const provinces = Array.from(new Set(
+    rows.map(row => normalizeProvinceName(row.province || '')).filter(Boolean)
+  ));
+
+  const geoEntries = await Promise.all(
+    provinces.map(async province => [province, await getLocalProvinceGeoJson(province)])
+  );
+  const geoMap = Object.fromEntries(geoEntries);
+
+  return rows.map((row) => {
+    const province = normalizeProvinceName(row.province || '');
+    const inferred = inferLocalBridgeCoordinate(row, province, geoMap[province]);
+    if (!inferred) return row;
+    return {
+      ...row,
+      lng: inferred[0],
+      lat: inferred[1],
+      coordinateSource: row.coordinateSource === '原始坐标' ? row.coordinateSource : '本地地市坐标估算'
+    };
+  });
 }
 
 // 将 CSV 文本直接内嵌到代码中，避免每次运行都读取本地文件
@@ -670,7 +898,7 @@ async function geocodeByAmap(address, cityHint, key) {
   });
 
   const url = `https://restapi.amap.com/v3/geocode/geo?${params.toString()}`;
-  const resp = await fetch(url);
+  const resp = await fetch(url, { referrerPolicy: 'no-referrer' });
   const data = await resp.json();
 
   if (data.status === '1' && Array.isArray(data.geocodes) && data.geocodes.length > 0) {
@@ -686,7 +914,7 @@ async function geocodeByAmap(address, cityHint, key) {
   return null;
 }
 
-async function loadCsvData() {
+async function loadCsvData(targetProvince = '') {
   const key = getAmapKey();
   if (!key) {
     alert('未配置高德 Key，暂时无法生成精准桥梁坐标。');
@@ -697,6 +925,7 @@ async function loadCsvData() {
   const data = BRIDGE_DATA.map(item => ({ ...item }));
 
   for (const item of data) {
+    if (targetProvince && normalizeProvinceName(item.province || '') !== targetProvince) continue;
     if (Number.isFinite(item.lng) && Number.isFinite(item.lat)) continue;
 
     const cacheKey = `${item.province}|${item.address}|${item.name}`;
@@ -1485,21 +1714,46 @@ async function initChinaMapPage() {
     });
 
     const mapSeriesData = Object.entries(provinceCount).map(([name, value]) => ({ name, value }));
-
-    const heatData = filteredRows
-      .filter(d => Number.isFinite(d.lng) && Number.isFinite(d.lat))
-      .map(d => [d.lng, d.lat, 1]);
+    const provinceScatterData = Object.entries(provinceCount)
+      .map(([name, count]) => {
+        const center = PROVINCE_CENTER_COORDS[name];
+        if (!center) return null;
+        return {
+          name,
+          province: name,
+          count,
+          value: [center[0], center[1], count]
+        };
+      })
+      .filter(Boolean);
 
     // 2）配置全国地图
+    const isColorHeatmap = INDEX_LINK_STATE.mapMode === 'heatmap';
     const option = {
       backgroundColor: 'transparent',
-      tooltip: { trigger: 'item' },
+      tooltip: {
+        trigger: 'item',
+        formatter: (params) => {
+          if (params.seriesType === 'map') {
+            const value = Number.isFinite(params.value) ? params.value : 0;
+            return `${params.name}<br/>桥梁数量：${value}`;
+          }
+          const d = params.data || {};
+          const count = Number.isFinite(d.count) ? d.count : (Array.isArray(d.value) ? d.value[2] : 0);
+          return `${d.province || d.name || params.name || '桥梁点位'}<br/>桥梁数量：${count || 0}`;
+        }
+      },
       visualMap: {
         min: 0,
         max: Math.max(...mapSeriesData.map(d => d.value), 1),
-        show: false,
+        seriesIndex: 0,
+        show: isColorHeatmap,
+        left: 18,
+        bottom: 18,
+        text: ['高', '低'],
+        textStyle: { color: '#f2e8cf' },
         inRange: {
-          color: ['#214a67', '#2e7898', '#66b5d6']
+          color: ['#1f4d6e', '#2e7898', '#66b5d6', '#f0bd5a']
         }
       },
       geo: {
@@ -1542,30 +1796,31 @@ async function initChinaMapPage() {
           type: 'map',
           map: mapName,
           geoIndex: 0,
-          data: mapSeriesData
-        },
-        {
-          name: '桥梁点位',
-          type: INDEX_LINK_STATE.mapMode === 'heatmap' ? 'heatmap' : 'effectScatter',
-          coordinateSystem: 'geo',
-          data: INDEX_LINK_STATE.mapMode === 'heatmap'
-            ? heatData
-            : filteredRows
-                .filter(d => Number.isFinite(d.lng) && Number.isFinite(d.lat))
-                .map(d => ({ name: d.name, value: [d.lng, d.lat, 1], dynasty: d.dynasty })),
-          pointSize: 6,
-          blurSize: 14,
-          symbolSize: 7,
-          showEffectOn: 'render',
-          rippleEffect: { scale: 2.2, brushType: 'stroke' },
-          itemStyle: { color: '#ffd074', opacity: 0.85 },
-          progressive: 500,
-          zlevel: 2
+          data: mapSeriesData,
+          emphasis: { focus: 'self' }
         }
       ]
     };
 
-    chart.setOption(option);
+    if (!isColorHeatmap) {
+      option.series.push({
+          name: '省份桥梁数量',
+          type: 'effectScatter',
+          coordinateSystem: 'geo',
+          data: provinceScatterData,
+          symbolSize: (value) => {
+            const count = Array.isArray(value) ? value[2] : 0;
+            return Math.max(7, Math.min(24, Math.sqrt(count || 1) * 3.2));
+          },
+          showEffectOn: 'render',
+          rippleEffect: { scale: 2.2, brushType: 'stroke' },
+          itemStyle: { color: '#ffd074', opacity: 0.85 },
+          zlevel: 2
+      });
+    }
+
+    chart.off('click');
+    chart.setOption(option, true);
 
     // 3）监听省份点击事件：把省名作为 URL 参数跳转到 province.html
     chart.on('click', function (params) {
@@ -1613,11 +1868,10 @@ async function initProvinceMapPage() {
   }
 
   try {
-    // 2）并行加载省份 GeoJSON 与 CSV 数据
+    // 2）加载省份 GeoJSON；静态部署时外链不可用会自动使用本地轮廓兜底
     const [provinceGeoJSON, csvRows] = await Promise.all([
-      fetchGeoJsonWithFallback(PROVINCE_GEOJSON_URLS(adcode)),
-
-      loadCsvData()
+      loadProvinceGeoJson(adcode, provinceName),
+      loadCsvData(provinceName)
     ]);
 
     echarts.registerMap('current-province', provinceGeoJSON);
@@ -1633,8 +1887,17 @@ async function initProvinceMapPage() {
         const city = row.city || pickField(row, ['所属市区', '所属市区/具体地址', '市区', '城市', '地市', 'city']);
         const address = row.address || pickField(row, ['具体地址', '地址', '位置', 'location', '所在地点', '所属市区/具体地址']);
 
-        const lng = toNumberOrNull(row.lng ?? pickField(row, ['经度', 'lng', 'longitude']));
-        const lat = toNumberOrNull(row.lat ?? pickField(row, ['纬度', 'lat', 'latitude']));
+        let lng = toNumberOrNull(row.lng ?? pickField(row, ['经度', 'lng', 'longitude']));
+        let lat = toNumberOrNull(row.lat ?? pickField(row, ['纬度', 'lat', 'latitude']));
+        let coordinateSource = row.coordinateSource || '原始坐标';
+
+        if (!Number.isFinite(lng) || !Number.isFinite(lat)) {
+          const inferred = inferLocalBridgeCoordinate(row, provinceName, provinceGeoJSON);
+          if (inferred) {
+            [lng, lat] = inferred;
+            coordinateSource = '本地兜底估算';
+          }
+        }
 
         if (!bridgeName || !Number.isFinite(lng) || !Number.isFinite(lat)) return null;
         if (province !== provinceName) return null;
@@ -1647,7 +1910,7 @@ async function initProvinceMapPage() {
           city,
           address,
           batch: row.batch || pickField(row, ['批次', 'batch']) || '未知批次',
-          coordinateSource: row.coordinateSource || '原始坐标'
+          coordinateSource
         };
       })
       .filter(Boolean);
@@ -1656,6 +1919,7 @@ async function initProvinceMapPage() {
     renderProvinceSidePanels(provinceName, scatterData, chart);
 
     const onlineCount = scatterData.filter(d => String(d.coordinateSource).includes('在线编码')).length;
+    const localCount = scatterData.filter(d => String(d.coordinateSource).includes('本地')).length;
     const rawCount = scatterData.filter(d => d.coordinateSource === '原始坐标').length;
 
     // 若省内仅 1 个点，把地图自动聚焦到该点附近，避免点太小或在边缘不易观察
@@ -1753,7 +2017,7 @@ async function initProvinceMapPage() {
     chart.setOption(option);
 
     if (tipsEl) {
-      tipsEl.textContent = `已加载 ${provinceName}，桥梁点位数：${scatterData.length}（原始坐标 ${rawCount} 条，在线编码 ${onlineCount} 条）${isSinglePoint ? '，已自动聚焦到该点' : ''}`;
+      tipsEl.textContent = `已加载 ${provinceName}，桥梁点位数：${scatterData.length}（原始坐标 ${rawCount} 条，本地估算 ${localCount} 条，在线编码 ${onlineCount} 条）${isSinglePoint ? '，已自动聚焦到该点' : ''}`;
     }
 
     // 5）点击散点进入桥梁详情页
